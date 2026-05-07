@@ -1,5 +1,5 @@
 *.csv
 Banco Genetico Imputado LD/
 info_pre_processamento/
-.venv
+.venv/
 .ipynb_checkpoints/
