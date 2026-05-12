@@ -1,51 +1,42 @@
-Predição de Níveis de Glicose via Random Forest em Dados Genômicos
-Este repositório contém o pipeline de análise estatística desenvolvido para a analise de marcadores genéticos (SNPs) e variáveis sociodemográficas. O projeto é parte de uma pesquisa de Iniciação Científica do departamento de Estatística da UFSCar.
+# Glucose Level Prediction via Random Forest in Genomic Data
 
-Estrutura dos Dados
-O projeto integra três fontes distintas de dados, harmonizadas através do identificador único do indivíduo.
+This repository contains the statistical analysis pipeline developed for evaluating genetic markers (SNPs) and sociodemographic variables. Maintained by a research group from the Department of Statistics at the Federal University of São Carlos (UFSCar), this project focuses on robust predictive modeling for genomic data.
 
-1. Banco Genético Imputado LD
-Localizado na pasta Banco Genetico Imputado LD, contém arquivos no formato .raw (output do PLINK) para cada cromossomo.
+## Data Structure
+The project integrates three distinct data sources, harmonized through unique individual identifiers.
 
-Nomenclatura: chr{num}_imputado_LD.raw
+### 1. LD-Imputed Genetic Database
+Located in the `Banco Genetico Imputado LD` directory, this folder contains `.raw` files (PLINK output) for each chromosome.
 
-Amostra: 720 indivíduos.
+*   **Naming Convention:** `chr{num}_imputado_LD.raw`
+*   **Sample Size:** 720 individuals.
+*   **Metadata:** The first six columns contain pedigree and phenotype identifiers. The `IID` column serves as the primary key for sorting and data integration.
+*   **Genetic Predictors:** Numerically encoded SNPs (e.g., `rs62224618_T`).
 
-Metadados: As primeiras seis colunas são identificadores de pedigree e fenótipo. A coluna IID é a chave primária utilizada para a ordenação e integração dos dados.
+### 2. Marker Maps
+Files detailing the exact locations of the SNPs.
 
-Preditores Genéticos: SNPs codificados numericamente (ex: rs62224618_T).
+*   **Naming Convention:** `chr{num}map_imputado_LD.map`
+*   **Content:** Chromosome code, SNP Name, Position in Morgans, and Base pair coordinate.
 
-2. Mapas de Marcadores
-Arquivos que descrevem a localização dos SNPs:
+### 3. Phenotypes and Covariates
+The file `banco_fenotipos_conformal.csv` contains the target outcomes and clinical variables.
 
-Nomenclatura: chr{num}map_imputado_LD.map
+*   **Key Variable:** `samplefilename`, which must be strictly paired and sorted alongside the `IID` variable from the genetic database.
+*   **Categorical Variables:** Includes data regarding smoking habits, race/color, marital status, occupation, and alcohol consumption.
 
-Conteúdo: Código do cromossomo, Nome do SNP, Posição em Morgans e Coordenada do par de bases.
+## Statistical Methodology
+The data processing and analysis follow strict statistical rigor to handle the high dimensionality inherent to genomic data (p >> n):
 
-3. Fenótipos e Covariáveis
-Arquivo banco_fenotipos_conformal.csv contendo os desfechos e variáveis clínicas.
+*   **Preprocessing:** Detailed in the `info_pre_processamento` folder, covering imputation criteria and quality control protocols.
+*   **Encoding:** Categorical variables are processed using One-Hot Encoding to prevent arbitrary hierarchies in nominal data.
+*   **Model:** Implementation of the Random Forest Regressor algorithm.
+*   **Configuration:** 500 decision trees.
+*   **Optimization:** The `max_features` hyperparameter is specifically tuned to handle a dimensionality of approximately 244,000 columns.
+*   **Validation:** Error estimation is conducted via Out-of-Bag (OOB) Score, accompanied by a Feature Importance analysis based on residual variance reduction.
 
-Variável Chave: samplefilename, que deve ser obrigatoriamente pareada e ordenada com a variável IID do banco genético.
+## Repository Notes & Data Access
+Due to GitHub's storage constraints and the sensitive nature of genomic data, the raw `.raw` and `.csv` files are not hosted in this repository. The scripts are configured to read the local directory structure exactly as described above.
 
-Variáveis Categóricas: Inclui dados sobre fumo, raça/cor, estado conjugal, ocupação e consumo de álcool.
-
-Metodologia Estatística
-O processamento e análise seguem rigor estatístico para lidar com a alta dimensionalidade (p >> n):
-
-Pré-processamento: Descrito detalhadamente na pasta info_pre_processamento, incluindo critérios de imputação e controle de qualidade.
-
-Codificação: Variáveis categóricas tratadas via One-Hot Encoding para evitar hierarquias arbitrárias em dados nominais.
-
-Modelo: Implementação do algoritmo Random Forest Regressor.
-
-Configuração: 500 árvores de decisão.
-
-Otimização: Uso de max_features ajustado para lidar com a dimensionalidade de aproximadamente 244.000 colunas.
-
-Validação: Estimativa de erro via Out-of-Bag (OOB) Score e análise de importância de variáveis (Feature Importance) baseada na redução da variância residual.
-
-Observações sobre os Arquivos
-Devido às restrições de armazenamento do GitHub e à natureza sensível dos dados genômicos, os arquivos brutos (.raw e .csv) não estão hospedados neste repositório. O código está configurado para ler a estrutura de pastas local conforme descrito acima.
-
-Contato
-Para dúvidas sobre a metodologia ou acesso aos dados brutos para fins de reprodução acadêmica, favor entrar em contato através do e-mail disponível no perfil deste GitHub.
+## Contact
+For inquiries regarding the methodology or to request access to the raw data for academic reproduction, please contact the research team via the email provided in this GitHub profile.
