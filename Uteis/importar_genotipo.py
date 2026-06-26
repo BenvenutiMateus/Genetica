@@ -15,4 +15,3 @@ def read_gene(caminho, genes = [i for i in range(1,23)]):
                 else:
                     df_completo = pd.merge(left=df_completo,right=df_gen,on='IID',how='inner')
     return df_completo
-
