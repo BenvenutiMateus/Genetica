@@ -2,6 +2,10 @@
 
 This repository contains the statistical analysis pipeline developed for evaluating genetic markers (SNPs) and sociodemographic variables. Maintained by a research group from the Department of Statistics at the Federal University of São Carlos (UFSCar), this project focuses on robust predictive modeling for genomic data.
 
+## Reference / Related Publication
+The methodologies implemented in this pipeline are based on foundational concepts discussed in the following work:
+
+* **arXiv:** [1109.0152](https://arxiv.org/abs/1109.0152)
 ## Data Structure
 The project integrates three distinct data sources, harmonized through unique individual identifiers.
 
@@ -30,10 +34,8 @@ The data processing and analysis follow strict statistical rigor to handle the h
 
 *   **Preprocessing:** Detailed in the `info_pre_processamento` folder, covering imputation criteria and quality control protocols.
 *   **Encoding:** Categorical variables are processed using One-Hot Encoding to prevent arbitrary hierarchies in nominal data.
-*   **Model:** Implementation of the Random Forest Regressor algorithm.
-*   **Configuration:** 500 decision trees.
-*   **Optimization:** The `max_features` hyperparameter is specifically tuned to handle a dimensionality of approximately 244,000 columns.
-*   **Validation:** Error estimation is conducted via Out-of-Bag (OOB) Score, accompanied by a Feature Importance analysis based on residual variance reduction.
+*   **Model:** Implementation of the Random Forest Regressor and Classifier algorithm.
+*   **Validation:** Error estimation is conducted via Permutation Score, and methods that you can see in the paper.
 
 ## Repository Notes & Data Access
 Due to GitHub's storage constraints and the sensitive nature of genomic data, the raw `.raw` and `.csv` files are not hosted in this repository. The scripts are configured to read the local directory structure exactly as described above.
