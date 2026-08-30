@@ -4,3 +4,5 @@ info_pre_processamento/
 .venv/
 .ipynb_checkpoints/
 /data
+/models
+/reports
