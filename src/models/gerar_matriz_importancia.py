@@ -15,18 +15,19 @@ def extrair_frequencia_estabilidade_grafo(
     df, alvos, num_trees=500, iteracoes=50, fracao_amostra=0.5, q= 0.8
 ):
     """Extrai a frequência de estabilidade das arestas baseado no artigo
-
     Fellinghauer et al. (2013).
 
     Parâmetros:
-    - q: Número de top variáveis com maior importância que serão selecionadas
+    * q: Número de top variáveis com maior importância que serão selecionadas
          em cada iteração (frequência binária).
     """
-    # Matriz inicializada com zeros
     inicio = time.perf_counter()
     matriz_estabilidade = pd.DataFrame(
         index=alvos, columns=df.columns, dtype=np.float64
     ).fillna(0.0)
+
+    total_passos = len(alvos) * iteracoes
+    passo_atual = 0
 
     for target in alvos:
         print(f"Rodando a variável {target}")
@@ -38,7 +39,6 @@ def extrair_frequencia_estabilidade_grafo(
                 df_sub = df_alvo.sample(n=fracao_amostra, random_state=i)
             else:
                 df_sub = df_alvo.sample(frac=fracao_amostra, random_state=i)
-
 
             X = df_sub.drop(columns=[target])
             y = df_sub[target]
@@ -67,10 +67,9 @@ def extrair_frequencia_estabilidade_grafo(
             importancias = resultado_permutacao.importances_mean
 
             importancias_series = pd.Series(importancias, index=X.columns).clip(lower = 0)
-
             importancias_ordenadas = importancias_series.sort_values(ascending = False)
             
-            # 3. Normalizar
+            # Normalizar
             soma_total = importancias_ordenadas.sum()
             
             if soma_total > 0:
@@ -78,28 +77,33 @@ def extrair_frequencia_estabilidade_grafo(
             else:
                 importancias_normalizadas = importancias_ordenadas
 
-            # 4. Calcular soma cumulativa
+            # Calcular soma cumulativa
             soma_cumulativa = importancias_normalizadas.cumsum()
-
             print(soma_cumulativa)
             
-            # 5. Encontrar os indices ate o primeiro que passa do limiar
+            # Encontrar os indices ate o primeiro que passa do limiar
             variaveis_selecionadas = soma_cumulativa[
                 soma_cumulativa.shift(fill_value=0) < q
             ].index
-            
             print(variaveis_selecionadas)
             
             matriz_estabilidade.loc[target, variaveis_selecionadas] += 1.0
 
+            # Atualizar e exibir o percentual de progresso
+            passo_atual += 1
+            percentual = (passo_atual / total_passos) * 100
+            print(f"Progresso: {percentual:.2f}% concluído ({passo_atual} de {total_passos} passos)")
+
         matriz_estabilidade.loc[target] = (
             matriz_estabilidade.loc[target] / iteracoes
         )
+        
     fim = time.perf_counter()
     print(f'Matriz gerada em {fim - inicio:.4f} segundos!')
+    
     return matriz_estabilidade
 
-matriz = extrair_frequencia_estabilidade_grafo(df, df.columns, num_trees = 500, iteracoes = 100)
+matriz = extrair_frequencia_estabilidade_grafo(df, df.columns, num_trees = 800, iteracoes = 200, q= 0.9)
 
 matriz.to_csv(
     f'reports/matriz_importancia_{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.csv'

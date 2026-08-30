@@ -5,18 +5,13 @@ import seaborn as sns
 import datetime
 import networkx as nx
 import numpy as np
+from src.utils.transformacoes import imp_to_adj
 
 PATH = 'reports/matriz_importancia_2026-08-28_09-52-02.csv'
 
-df = pd.read_csv(PATH, index_col = 'Unnamed: 0')
+df = pd.read_csv(PATH, index_col = 0)
 
-matriz_numpy = df.to_numpy()
-
-matriz_min = np.minimum(matriz_numpy,matriz_numpy.T)
-
-df = pd.DataFrame(
-    matriz_min, index= df.index, columns= df.columns
-)
+df = imp_to_adj(df)
 
 print(df)
 def plotar_grafo(matriz, IMPORT_MIN):
