@@ -7,3 +7,5 @@ info_pre_processamento/
 /models
 /reports
 .Rhistory
+__pycache__/
+
