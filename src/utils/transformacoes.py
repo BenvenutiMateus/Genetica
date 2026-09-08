@@ -12,3 +12,14 @@ def imp_to_adj(df):
         index=df.index,
         columns=df.columns
     )
+
+def imp_to_adj_max(df):
+    matriz = df.to_numpy()
+
+    matriz_min = np.maximum(matriz, matriz.T)
+
+    return pd.DataFrame(
+        matriz_min,
+        index=df.index,
+        columns=df.columns
+    )

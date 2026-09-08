@@ -12,7 +12,7 @@ df = pd.read_csv('data/limpos/banco_fenotipos_conformal.csv')
 df = df.drop(columns = ['id', 'samplefilename'], errors = 'ignore')
 
 def extrair_frequencia_estabilidade_grafo(
-    df, alvos, num_trees=500, iteracoes=50, fracao_amostra=0.5, q= 0.8
+    df, alvos, num_trees=500, iteracoes=50, fracao_amostra=0.5, q = 3, p = 3
 ):
     """Extrai a frequência de estabilidade das arestas baseado no artigo
     Fellinghauer et al. (2013).
@@ -28,7 +28,8 @@ def extrair_frequencia_estabilidade_grafo(
 
     total_passos = len(alvos) * iteracoes
     passo_atual = 0
-
+    pasta = f'reports/Importancias_{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}'
+    os.mkdir(pasta)
     for target in alvos:
         print(f"Rodando a variável {target}")
         colunas_categoricas = [coluna for coluna in df.columns if df[coluna].nunique() < 6]
@@ -83,10 +84,11 @@ def extrair_frequencia_estabilidade_grafo(
             
             # Encontrar os indices ate o primeiro que passa do limiar
             variaveis_selecionadas = soma_cumulativa[
-                soma_cumulativa.shift(fill_value=0) < q
+                soma_cumulativa.shift(fill_value=0) < p
             ].index
             print(variaveis_selecionadas)
-            
+            if len(variaveis_selecionadas) < q:
+                variaveis_selecionadas = soma_cumulativa[:q + 1]
             matriz_estabilidade.loc[target, variaveis_selecionadas] += 1.0
 
             # Atualizar e exibir o percentual de progresso
@@ -103,7 +105,7 @@ def extrair_frequencia_estabilidade_grafo(
     
     return matriz_estabilidade
 
-matriz = extrair_frequencia_estabilidade_grafo(df, df.columns, num_trees = 800, iteracoes = 200, q= 0.9)
+matriz = extrair_frequencia_estabilidade_grafo(df, df.columns, num_trees = 800, iteracoes = 200, p= 0.9, q)
 
 matriz.to_csv(
     f'reports/matriz_importancia_{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.csv'

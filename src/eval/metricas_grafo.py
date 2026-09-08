@@ -3,8 +3,8 @@ import pandas as pd
 import networkx as nx
 import numpy as np
 from src.utils.transformacoes import imp_to_adj
-
-df = pd.read_csv('reports/matriz_importancia_2026-08-29_01-23-51.csv', index_col = 0)
+PATH = f'reports/matriz_importancia_2026-08-29_16-38-09.csv'
+df = pd.read_csv(PATH, index_col = 0)
 
 df = imp_to_adj(df)
 

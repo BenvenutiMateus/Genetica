@@ -5,15 +5,14 @@ import seaborn as sns
 import datetime
 import networkx as nx
 import numpy as np
-from src.utils.transformacoes import imp_to_adj
+from src.utils.transformacoes import imp_to_adj, imp_to_adj_max
 
-PATH = 'reports/matriz_importancia_2026-08-28_09-52-02.csv'
+PATH = 'models/Importancias_2026-09-05_22-04-33/matriz_estabilidade_metodo_original.csv'
 
 df = pd.read_csv(PATH, index_col = 0)
 
 df = imp_to_adj(df)
 
-print(df)
 def plotar_grafo(matriz, IMPORT_MIN):
     G = nx.from_pandas_adjacency(matriz, create_using=nx.Graph)
     
@@ -27,9 +26,9 @@ def plotar_grafo(matriz, IMPORT_MIN):
     G.remove_nodes_from(list(nx.isolates(G)))
     
     # --- ESTILIZAÇÃO DO GRAFO ---
-    plt.figure(figsize=(10,15), dpi=200)
+    plt.figure(figsize=(15,15), dpi=200)
     
-    pos = nx.spring_layout(G, weight='weight', k = 1.2, iterations=100, seed=1)
+    pos = nx.spring_layout(G, weight='weight', k = 1.2, iterations=200, seed=1)
     
     pesos = np.array([d["weight"] for u, v, d in G.edges(data=True)])
     
@@ -55,6 +54,8 @@ def plotar_grafo(matriz, IMPORT_MIN):
     )
     plt.axis("off")
     plt.tight_layout()
-    plt.savefig(f'reports/grafo{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.jpg')
+    caminho_saida = f'reports/grafo{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.jpg'
+    print(f'Imagem salva em {caminho_saida}')
+    plt.savefig(caminho_saida)
 
-plotar_grafo(df, 0.8)
+plotar_grafo(df, 0.9)
