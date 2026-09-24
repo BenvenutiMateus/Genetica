@@ -44,7 +44,7 @@ def extrair_importancias_brutas(
 
     colunas_categoricas = [
         c for c in df.columns
-        if df[c].nunique() < 6
+        if df[c].nunique() < 5
     ]
 
     # Barra geral
@@ -106,7 +106,6 @@ def extrair_importancias_brutas(
                     n_estimators=num_trees,
                     max_features=0.3,
                     n_jobs=-1,
-                    bootstrap=False,
                     random_state=i
                 )
 
@@ -115,7 +114,6 @@ def extrair_importancias_brutas(
                 modelorf = RandomForestClassifier(
                     n_estimators=num_trees,
                     max_features=0.3,
-                    bootstrap=False,
                     n_jobs=-1,
                     random_state=i
                 )
@@ -393,12 +391,13 @@ def calcular_matriz_estabilidade(pasta, alvos=None, todas_colunas=None, q=3, p=0
     print(f'Matriz gerada em {fim - inicio:.4f} segundos!')
     return matriz_estabilidade
 
-
-# df = pd.read_csv('data/limpos/banco_fenotipos_conformal.csv')
-# df = df.drop(columns = ['samplefilename'])
-# extrair_importancias_brutas(df, df.columns, iteracoes = 10, n_permut =4,)
-
-caminho = 'models/Importancias_2026-09-05_22-04-33'
-matriz = calcular_matriz_estabilidade(caminho, q = 20, p = 0.1)
-
-matriz.to_csv(os.path.join(caminho, 'matriz_estabilidade_metodo_original.csv'))
+if __name__ == "__main__":
+    df = pd.read_csv('data/limpos/banco_fenotipos_conformal.csv')
+    
+    df = df.drop(columns = ['samplefilename'])
+    extrair_importancias_brutas(df, df.columns, iteracoes = 50)
+    
+    # caminho = 'sintetics'
+    # matriz = calcular_matriz_estabilidade(caminho, q = 4, p = 0.1)
+    
+    # matriz.to_csv(os.path.join(caminho, 'matriz_estabilidade_metodo_original.csv'))
