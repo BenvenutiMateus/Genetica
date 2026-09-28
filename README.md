@@ -41,4 +41,4 @@ The data processing and analysis follow strict statistical rigor to handle the h
 Due to GitHub's storage constraints and the sensitive nature of genomic data, the raw `.raw` and `.csv` files are not hosted in this repository. The scripts are configured to read the local directory structure exactly as described above.
 
 ## Contact
-For inquiries regarding the methodology or to request access to the raw data for academic reproduction, please contact the research team via the email provided in this GitHub profile.
+For inquiries regarding the methodology or to request access to the raw data for academic reproduction, please contact the research team through this website: [contact](https://benvenutimateus.github.io/contact.html).
