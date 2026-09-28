@@ -132,7 +132,7 @@ def extrair_importancias_brutas(
             importancias_brutas = pd.Series(
                 resultado_permutacao.importances_mean,
                 index=X.columns
-            )
+            ).clip(lower=0)
 
             linha = pd.DataFrame({
                 'iteracao': i,

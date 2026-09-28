@@ -7,21 +7,21 @@ import networkx as nx
 import numpy as np
 from src.utils.transformacoes import imp_to_adj, imp_to_adj_max
 
-PATH = 'models/Importancias_2026-09-05_22-04-33/matriz_estabilidade_metodo_original.csv'
+PATH = 'sintetics/matriz_estabilidade_metodo_original.csv'
 
 df = pd.read_csv(PATH, index_col = 0)
 
 df = imp_to_adj(df)
 
-def plotar_grafo(matriz, IMPORT_MIN):
+def plotar_grafo(matriz, pithr):
     G = nx.from_pandas_adjacency(matriz, create_using=nx.Graph)
     
-    arestas_para_remover = [
-        (u, v)
-        for u, v, d in G.edges(data=True)
-        if d["weight"] <= IMPORT_MIN
-    ]
-    G.remove_edges_from(arestas_para_remover)
+    # arestas_para_remover = [
+    #     (u, v)
+    #     for u, v, d in G.edges(data=True)
+    #     if d["weight"] <= pithr
+    # ]
+    # G.remove_edges_from(arestas_para_remover)
     
     G.remove_nodes_from(list(nx.isolates(G)))
     
@@ -49,7 +49,7 @@ def plotar_grafo(matriz, IMPORT_MIN):
     nx.draw_networkx_labels(G, pos, font_size=9, font_weight="bold")
     
     plt.title(
-        f"Grafo de Importância Mínima entre Variáveis (Limiar > {IMPORT_MIN})",
+        f"Grafo de Importância Mínima entre Variáveis (Limiar > {pithr})",
         fontsize=14,
     )
     plt.axis("off")
@@ -58,4 +58,4 @@ def plotar_grafo(matriz, IMPORT_MIN):
     print(f'Imagem salva em {caminho_saida}')
     plt.savefig(caminho_saida)
 
-plotar_grafo(df, 0.9)
+plotar_grafo(df, 0.75)
